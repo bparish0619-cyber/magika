@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { Filesystem } from '@capacitor/filesystem';
 import { Magika } from 'magika';
+import contentTypesKb from './content_types_kb.json';
 
 interface DetectionResult {
   id: string;
@@ -135,9 +136,16 @@ function App() {
     setResults(prev => prev.filter(r => r.id !== id));
   };
 
+  const getInfo = (label: string) => {
+    return (contentTypesKb as any)[label] || {};
+  };
+
   return (
     <div className="app-container">
       <header className="header">
+        <div className="header-logo">
+          <img src="/icon-192.webp" alt="Magika Logo" className="logo-img" />
+        </div>
         <h1>Magika Android</h1>
         <p>AI-Powered Content-Type Detection</p>
       </header>
@@ -222,37 +230,51 @@ function App() {
 
       {selectedResult && (
         <div className="modal-overlay" onClick={() => setSelectedResult(null)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-content magika-modal" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>File Details</h3>
+              <h3>File Analysis</h3>
               <button className="btn-close" onClick={() => setSelectedResult(null)}>
                 <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
             <div className="modal-body">
               <div className="detail-row">
-                <span className="detail-label">Name</span>
-                <span className="detail-value">{selectedResult.name}</span>
+                <span className="detail-label">File Path</span>
+                <span className="detail-value color-path break-all">{selectedResult.path}</span>
               </div>
               <div className="detail-row">
-                <span className="detail-label">Full Path</span>
-                <span className="detail-value break-all">{selectedResult.path}</span>
+                <span className="detail-label">Content Type Label</span>
+                <span className="detail-value color-label">{selectedResult.label}</span>
               </div>
               <div className="detail-row">
-                <span className="detail-label">Content Type</span>
-                <span className="detail-value highlight">{selectedResult.label}</span>
+                <span className="detail-label">Description</span>
+                <span className="detail-value color-desc">{getInfo(selectedResult.label).description || 'Unknown'}</span>
               </div>
               <div className="detail-row">
-                <span className="detail-label">Is Text?</span>
-                <span className="detail-value">{selectedResult.fullPrediction?.output?.is_text ? 'Yes' : 'No'}</span>
+                <span className="detail-label">Group</span>
+                <span className="detail-value color-group">{getInfo(selectedResult.label).group || 'Unknown'}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">MIME Type</span>
+                <span className="detail-value color-mime">{getInfo(selectedResult.label).mime_type || 'Unknown'}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Extensions</span>
+                <span className="detail-value color-ext">{(getInfo(selectedResult.label).extensions || []).join(', ') || 'None'}</span>
               </div>
               <div className="detail-row">
                 <span className="detail-label">Confidence Score</span>
-                <span className="detail-value">{(selectedResult.score * 100).toFixed(2)}%</span>
+                <span className="detail-value color-score">{selectedResult.score.toFixed(6)}</span>
               </div>
               <div className="detail-row">
-                <span className="detail-label">Overwrite Reason</span>
-                <span className="detail-value">{selectedResult.fullPrediction?.overwrite_reason || 'None'}</span>
+                <span className="detail-label">Confidence (%)</span>
+                <span className="detail-value color-score-pct">{(selectedResult.score * 100).toFixed(2)}%</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Overruled Output</span>
+                <span className="detail-value color-overrule">
+                  {selectedResult.fullPrediction?.overwrite_reason ? selectedResult.fullPrediction?.output?.label : '(None)'}
+                </span>
               </div>
             </div>
           </div>
