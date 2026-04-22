@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Magika</string>
+    <string name="title_activity_main">Magika</string>
+    <string name="package_name">com.magika.app</string>
+    <string name="custom_url_scheme">com.magika.app</string>
+</resources>
