@@ -143,9 +143,6 @@ function App() {
   return (
     <div className="app-container">
       <header className="header">
-        <div className="header-logo">
-          <img src="/icon-192.webp" alt="Magika Logo" className="logo-img" />
-        </div>
         <h1>Magika Android</h1>
         <p>AI-Powered Content-Type Detection</p>
       </header>
@@ -239,30 +236,39 @@ function App() {
             </div>
             <div className="modal-body">
               <div className="detail-row">
+                <span className="detail-label">File Path</span>
                 <span className="detail-value color-path break-all">{selectedResult.path}</span>
               </div>
               <div className="detail-row">
+                <span className="detail-label">Content Type Label</span>
                 <span className="detail-value color-label">{selectedResult.label}</span>
               </div>
               <div className="detail-row">
+                <span className="detail-label">Description</span>
                 <span className="detail-value color-desc">{getInfo(selectedResult.label).description || 'Unknown'}</span>
               </div>
               <div className="detail-row">
+                <span className="detail-label">Group</span>
                 <span className="detail-value color-group">{getInfo(selectedResult.label).group || 'Unknown'}</span>
               </div>
               <div className="detail-row">
+                <span className="detail-label">MIME Type</span>
                 <span className="detail-value color-mime">{getInfo(selectedResult.label).mime_type || 'Unknown'}</span>
               </div>
               <div className="detail-row">
+                <span className="detail-label">Extensions</span>
                 <span className="detail-value color-ext">{(getInfo(selectedResult.label).extensions || []).join(', ') || 'None'}</span>
               </div>
               <div className="detail-row">
+                <span className="detail-label">Confidence Score</span>
                 <span className="detail-value color-score">{selectedResult.score.toFixed(6)}</span>
               </div>
               <div className="detail-row">
+                <span className="detail-label">Confidence (%)</span>
                 <span className="detail-value color-score-pct">{(selectedResult.score * 100).toFixed(2)}%</span>
               </div>
               <div className="detail-row">
+                <span className="detail-label">Overruled Output</span>
                 <span className="detail-value color-overrule">
                   {selectedResult.fullPrediction?.overwrite_reason ? selectedResult.fullPrediction?.output?.label : '(None)'}
                 </span>
